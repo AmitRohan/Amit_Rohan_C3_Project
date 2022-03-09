@@ -61,4 +61,7 @@ public class Restaurant {
         return name;
     }
 
+    public int getOderValueFor(List<String> items) {
+        return items.stream().reduce(0, (subtotal, element) -> subtotal + (findItemByName(element).getPrice()), Integer::sum);
+    }
 }

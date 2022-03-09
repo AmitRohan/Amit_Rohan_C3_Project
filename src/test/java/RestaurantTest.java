@@ -2,11 +2,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class RestaurantTest {
     Restaurant restaurant;
+
     @BeforeEach
     public void initializeRestaurant(){
         LocalTime openingTime = LocalTime.now().minusHours(2);
@@ -47,4 +50,32 @@ class RestaurantTest {
         assertThrows(itemNotFoundException.class,
                 ()->restaurant.removeFromMenu("French fries"));
     }
+
+    //>>>>>>>>>>>>>>>>>>>>>>>>>>>ORDER VALUE<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+    @Test
+    public void order_value_should_return_zero_for_no_item_in_list(){
+        List<String> orders = new ArrayList<String>();
+        assertEquals(0,restaurant.getOderValueFor(orders));
+    }
+
+    @Test
+    public void order_value_should_not_be_zero_if_items_in_list(){
+        List<String> orders = new ArrayList<String>();
+        orders.add("Vegetable lasagne");
+        assertNotEquals(0,restaurant.getOderValueFor(orders));
+    }
+
+    @Test
+    public void order_value_should_return_sum_of_items_price_in_the_passed_list(){
+        List<Item> allItems = restaurant.getMenu();
+        List<String> orders = new ArrayList<String>();
+        int expectedOrderValue = 0;
+        for (Item item:
+                allItems) {
+            orders.add(item.getName());
+            expectedOrderValue+=item.getPrice();
+        }
+        assertEquals(expectedOrderValue,restaurant.getOderValueFor(orders));
+    }
+
 }
